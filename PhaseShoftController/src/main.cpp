@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include "PhaseShift_Control.hpp"
 
 //* GPIO settings *//
 #define STATUS_LED1         (13)
@@ -18,35 +19,6 @@
 #define TABLE_SIZE          (4)
 #define AMOUNT_OF_SIZE      (4)
 #define STATES              (4)
-
-//* Private types *//
-typedef unsigned char uint8_t;
-
-typedef enum
-{
-  LINE_1 = 0,
-  LINE_2,
-  LINE_3,
-  LINE_4,
-}TableLine;
-
-typedef enum
-{
-  STATUS_IDLE = 0,
-  STATUS_MINUS_135,
-  STATUS_MINUS_45,
-  STATUS_PLUS_45,
-  STATUS_PLUS_135,
-}PhaseShiftStatus;
-
-typedef enum
-{
-  IDLE = 0,
-  PHASE_SHIFT_MINUS_135,
-  PHASE_SHIFT_MINUS_45,
-  PHASE_SHIFT_PLUS_45,
-  PHASE_SHIFT_PLUS_135,
-}PhaseShiftState;
 
 //* Private variables *//
 const uint8_t outputPinTable[TABLE_SIZE] = {STATUS_LED1, STATUS_LED2, CONTROL_SOCKET1, CONTROL_SOCKET2};
@@ -69,7 +41,7 @@ const String uartLogTable[TABLE_SIZE] = {
 static bool isButtonPressed(const uint8_t button);
 static String getUartCommand(void);
 static PhaseShiftStatus checkCommand(String command);
-static void setPhaseShift(const uint8_t *outputsTable, const uint8_t phaseShiftTable[][STATES], const TableLine line);
+static void setPhaseShift(const uint8_t *outputsTable, const uint8_t phaseShiftTable[][4], const TableLine line);
 static void sendUartLog(const uint8_t line);
 static PhaseShiftState setPhaseShiftState(const PhaseShiftStatus command);
 
@@ -108,7 +80,7 @@ void loop()
   phaseShift = getUartCommand();
   commandStatus = checkCommand(phaseShift);
   phaseShiftStateMachine = setPhaseShiftState(commandStatus);
- 
+
   switch(phaseShiftStateMachine)
   {
     case IDLE:
