@@ -1,25 +1,6 @@
 #include <Arduino.h>
 #include "PhaseShift_Control.hpp"
 
-//* GPIO settings *//
-#define STATUS_LED1         (13)
-#define STATUS_LED2         (12)
-#define BUTTON_GREEN        (11)
-#define BUTTON_RED          (10)
-#define BUTTON_BLUE         (9)
-#define BUTTON_BLACK        (8)
-#define CONTROL_SOCKET1     (7)
-#define CONTROL_SOCKET2     (6)
-
-//* UART settings *//
-#define BAUDRATE            (9600)
-
-//* Local define *//
-#define DEBOUNCE_TIME_MS    (50)
-#define TABLE_SIZE          (4)
-#define AMOUNT_OF_SIZE      (4)
-#define STATES              (4)
-
 //* Private variables *//
 const uint8_t outputPinTable[TABLE_SIZE] = {STATUS_LED1, STATUS_LED2, CONTROL_SOCKET1, CONTROL_SOCKET2};
 
@@ -53,24 +34,7 @@ PhaseShiftStatus commandStatus = STATUS_IDLE;
 //* Setup *//
 void setup()
 {
-  //* GPIO mode settings *//
-  pinMode(CONTROL_SOCKET1, OUTPUT);
-  pinMode(CONTROL_SOCKET2, OUTPUT);
-  pinMode(STATUS_LED1, OUTPUT);
-  pinMode(STATUS_LED2, OUTPUT);
-  pinMode(BUTTON_GREEN, INPUT_PULLUP);
-  pinMode(BUTTON_RED, INPUT_PULLUP);
-  pinMode(BUTTON_BLUE, INPUT_PULLUP);
-  pinMode(BUTTON_BLACK, INPUT_PULLUP);
-
-  //* If system start, all outputs set to LOW *//
-  digitalWrite(CONTROL_SOCKET1, LOW);
-  digitalWrite(CONTROL_SOCKET2, LOW);
-  digitalWrite(STATUS_LED1, LOW);
-  digitalWrite(STATUS_LED2, LOW);
-
-  //* Set UART baudrate *//
-  Serial.begin(BAUDRATE);
+    PhaseShift_GPIO_Init();
 }
 
 //* Main loop *//
