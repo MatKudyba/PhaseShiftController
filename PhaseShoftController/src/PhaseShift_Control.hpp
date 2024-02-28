@@ -51,5 +51,6 @@ typedef enum
 }PhaseShiftState;
 
 void PhaseShift_GPIO_Init(void);
-
+void PhaseShift_StateMachine(PhaseShiftState phaseShiftStateMachine, String phaseShift, PhaseShiftStatus commandStatus, 
+const uint8_t outputPinTable[], const uint8_t outputValues[][STATES]);
 #endif //* PHASESHIFT_CONTROL_HPP *//
